@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import GamestopGame from "../components/GamestopGame";
 
 const HomePage = () => {
-    const [linkOfAllGamestopGAmes, setLinkOfAllGamestopGAmes] = useState('https://www.gamestop.com/video-games/new?prefn1=platform&prefv1=Nintendo%7CNintendo%20Switch%7CPlayStation%204%7CPlayStation%205%7CSuper%20Nintendo%7CXbox%20One%7CXbox%20Series%20S%7CXbox%20Series%20X&view=new&hybrid=true')
+    const [linkOfAllGamestopGAmes, setLinkOfAllGamestopGames] = useState('https://www.gamestop.com/video-games/new?prefn1=platform&prefv1=Nintendo%7CNintendo%20Switch%7CPlayStation%204%7CPlayStation%205%7CSuper%20Nintendo%7CXbox%20One%7CXbox%20Series%20S%7CXbox%20Series%20X&view=new&hybrid=true')
     const [linkOfClearenceGamestop, setLinkOfClearenceGamestop] = useState('https://www.gamestop.com/search/new/?prefn1=platform&prefv1=Nintendo%7CNintendo%20Switch%7CPlayStation%204%7CPlayStation%205%7CSuper%20Nintendo%7CXbox%20One%7CXbox%20Series%20S%7CXbox%20Series%20X&view=new')
     const [numberOfPages, setNumberOfPages] = useState(1)
     const [data, setData] = useState([])
@@ -47,7 +47,7 @@ const HomePage = () => {
                         placeholder="link"
                         name='linkOfAllGamestopGAmes'
                         value={linkOfAllGamestopGAmes}
-                        onChange={(e) => setLinkOfAllGamestopGAmes(e.target.value)}
+                        onChange={(e) => setLinkOfAllGamestopGames(e.target.value)}
                         required
                     />
                     <input
