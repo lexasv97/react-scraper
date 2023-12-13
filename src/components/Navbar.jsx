@@ -1,8 +1,29 @@
+import { Link } from "react-router-dom"
+import { AuthContext } from "../context/auth.context";
+import { useContext, useState } from "react";
 
 const Navbar = () => {
-  return (
-    <div>Navbar</div>
-  )
+
+    // const { isLoggedIn, user } = useContext(AuthContext);
+
+    const getToken = () => {
+        return localStorage.getItem('authToken')
+    }
+
+    return (
+        <nav>
+            <div>
+                <div>
+                    {
+                        !getToken() && <Link to='/login'>
+                            <span>Login</span>
+                        </Link>
+                    }
+                </div>
+
+            </div>
+        </nav>
+    )
 }
 
 export default Navbar

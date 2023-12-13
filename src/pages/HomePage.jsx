@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react"
 import { post, get } from "../services/authService";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import GamestopGame from "../components/GamestopGame";
 
 const HomePage = () => {
-    const [linkOfAllGamestopGAmes, setLinkOfAllGamestopGAmes] = useState('')
-    const [linkOfClearenceGamestop, setLinkOfClearenceGamestop] = useState('')
-    const [numberOfPages, setNumberOfPages] = useState(0)
+    const [linkOfAllGamestopGAmes, setLinkOfAllGamestopGAmes] = useState('https://www.gamestop.com/video-games/new?prefn1=platform&prefv1=Nintendo%7CNintendo%20Switch%7CPlayStation%204%7CPlayStation%205%7CSuper%20Nintendo%7CXbox%20One%7CXbox%20Series%20S%7CXbox%20Series%20X&view=new&hybrid=true')
+    const [linkOfClearenceGamestop, setLinkOfClearenceGamestop] = useState('https://www.gamestop.com/search/new/?prefn1=platform&prefv1=Nintendo%7CNintendo%20Switch%7CPlayStation%204%7CPlayStation%205%7CSuper%20Nintendo%7CXbox%20One%7CXbox%20Series%20S%7CXbox%20Series%20X&view=new')
+    const [numberOfPages, setNumberOfPages] = useState(1)
     const [data, setData] = useState([])
     const navigate = useNavigate()
 
@@ -16,18 +17,26 @@ const HomePage = () => {
 
         post('/gamestop/new', body)
             .then((response) => {
-                console.log(response.data)
+                setData(response.data)
             })
             .catch(err => {
                 console.log(err)
             })
     }
 
-    const gamestopClearenceLinkSubmit = (e) => {
-        e.preventDefault()
-
-        const body = { linkOfClearenceGamestop }
+    const getAllGamestopGames = () => {
+        get('/gamestop')
+            .then((response) => {
+                setData(response.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
+
+    // useEffect(() => {
+    //     getAllGamestopGames()
+    // }, [])
     return (
         <div>
             <div>
@@ -53,30 +62,19 @@ const HomePage = () => {
                 </form>
             </div>
             <div>
-                <h1>Gamestop Clearence link</h1>
-                <form onSubmit={gamestopClearenceLinkSubmit}>
-                    <input
-                        type="text"
-                        placeholder="link"
-                        name='linkOfClearenceGamestop'
-                        value={linkOfClearenceGamestop}
-                        onChange={(e) => setLinkOfClearenceGamestop(e.target.value)}
-                        required
-                    />
-                    <button type="submit">Submit</button>
-                </form>
+                <p>https://www.gamestop.com/search/new/?prefn1=platform&prefv1=Nintendo%7CNintendo%20Switch%7CPlayStation%204%7CPlayStation%205%7CSuper%20Nintendo%7CXbox%20One%7CXbox%20Series%20S%7CXbox%20Series%20X&view=new</p>
             </div>
-            <div> {data && <div>
-            {
-                data.map((game) => {
-                    <div key={game._id}>
-                        <p>{game}</p>
-                        {/* <p>{game.link}</p> */}
+            
+            <div>
+                {data.length &&
+                    <div>
+                        {
+                            data.map((game) => {
+                                return (<GamestopGame key={game._id} game={game} />)
+                            })
+                        }
                     </div>
-                })
-            }
-            </div>
-            }
+                }
             </div>
         </div>
     )
