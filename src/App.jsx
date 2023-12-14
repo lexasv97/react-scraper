@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import { AuthContext } from './context/auth.context'
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
+import AmazonPage from './pages/amazonPages/AmazonPage'
 
 function App() {
 
@@ -38,6 +39,9 @@ function App() {
               <Route path='/logout' />
 
             </Route>
+
+            <Route path='/amazon' element={<AmazonPage />} />
+
 
       </Routes>
     </div>

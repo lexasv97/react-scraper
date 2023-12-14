@@ -19,6 +19,8 @@ const Navbar = () => {
                             <span>Login</span>
                         </Link>
                     }
+                    <Link to='/'>Gamestop</Link>
+                    <Link to='/amazon'>Amazon</Link>
                 </div>
 
             </div>
