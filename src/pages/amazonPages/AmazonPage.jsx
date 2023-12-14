@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
-import { get } from "../../services/authService"
+import { get, post } from "../../services/authService"
+import { Link } from "react-router-dom"
 
 const AmazonPage = () => {
 
@@ -22,17 +23,17 @@ const AmazonPage = () => {
 
         const body = {storeLink}
         post('/amazon/newlink', body)
-        .then((response) => {
-            setResponseMessage(response.data)
-        })
+        // .then((response) => {
+        //     setResponseMessage(response.data)
+        // })
         .catch(err => {
             console.log(err)
         })
     }
 
-    useEffect(() => {
-        getAllStores()
-    }, [])
+    // useEffect(() => {
+    //     getAllStores()
+    // }, [])
 
   return (
     <div>
@@ -44,7 +45,7 @@ const AmazonPage = () => {
             type="text"
             name='storeLink'
             value={storeLink}
-            onChange={(e) => setStoreLink}
+            onChange={(e) => setStoreLink(e.target.value)}
             required
             />
 
@@ -52,7 +53,19 @@ const AmazonPage = () => {
         </form>
 
         {responseMessage && <p>{responseMessage}</p>}
-        
+
+        <div>
+            <Link to='/amazon/research'>Research</Link>
+        </div>
+        <div>
+            <Link to='/amazon/statistics'>Statistics</Link>
+        </div>
+        <div>
+            <Link to='/amazon/deactivate'>Deactivate</Link>
+        </div>
+        <div>
+            <Link to='/amazon/savedlistings'>Saved listings</Link>
+        </div>
         {/* {
             allAmazonStores && 
             <div>
