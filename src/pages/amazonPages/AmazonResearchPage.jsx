@@ -32,6 +32,7 @@ const AmazonResearchPage = () => {
                             newData.map((store) => {
                                 return (
                                     <div>
+                                        <hr />
                                         <Link to={store.storeLink}>{store.storeName}</Link>
                                         <hr />
                                         {
