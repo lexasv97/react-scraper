@@ -6,7 +6,7 @@ const AmazonPage = () => {
 
     const [allAmazonStores, setAllAmazonStores] = useState([])
     const [storeLink, setStoreLink] = useState('')
-    const [responseMessage, setResponseMessage] = useState('')
+    const [message, setMessage] = useState('')
 
     const getAllStores = () => {
         get('/amazon/stores')
@@ -23,11 +23,13 @@ const AmazonPage = () => {
 
         const body = {storeLink}
         post('/amazon/newlink', body)
-        // .then((response) => {
-        //     setResponseMessage(response.data)
-        // })
-        .catch(err => {
-            console.log(err)
+        .then((response) => {
+            setMessage('Store was successfully added.')
+        })
+        .catch(error => {
+            const errorDescription = error.response.data.message;
+            console.log(error)
+            setMessage(errorDescription);
         })
     }
 
@@ -52,16 +54,13 @@ const AmazonPage = () => {
             <button type='submit'>Add store</button>
         </form>
 
-        {responseMessage && <p>{responseMessage}</p>}
+        {message && <p>{message}</p>}
 
         <div>
             <Link to='/amazon/research'>Research</Link>
         </div>
         <div>
             <Link to='/amazon/statistics'>Statistics</Link>
-        </div>
-        <div>
-            <Link to='/amazon/deactivate'>Deactivate</Link>
         </div>
         <div>
             <Link to='/amazon/savedlistings'>Saved listings</Link>

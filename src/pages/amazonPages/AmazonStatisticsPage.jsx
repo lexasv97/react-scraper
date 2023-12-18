@@ -9,6 +9,8 @@ const AmazonStatisticsPage = () => {
   const [data, setData] = useState([])
   const [deactivatedStates, setDeactivatedStates] = useState({})
   const [deactivatedStores, setDeactivatedStores] = useState([]); // State to store deactivated stores
+  const [searchField, setSearchField] = useState('')
+  const [filteredData, setFilteredData] = useState([]); // New state for filtered data
 
   const columns = [
     { key: 'storeName', name: 'Store name' },
@@ -20,7 +22,17 @@ const AmazonStatisticsPage = () => {
     { key: "checkbox", name: 'Deactivate' }
   ]
 
-  
+  const handleChange = (e) => {
+    setSearchField(e.target.value);
+    const filtered = data.filter((store) => {
+      return (
+        store.storeLink.toLowerCase().includes(searchField.toLowerCase()) ||
+        store.storeName.toLowerCase().includes(searchField.toLowerCase())
+      )
+    })
+    setFilteredData(filtered); // Update filtered data state instead of directly setting 'data'
+  }
+
   const getAllActiveStores = async () => {
     try {
       const res = await get('/amazon/getAllActiveStores');
@@ -35,7 +47,7 @@ const AmazonStatisticsPage = () => {
       console.log(err);
     }
   };
-  
+
   useEffect(() => {
     getAllActiveStores()
   }, [])
@@ -70,15 +82,16 @@ const AmazonStatisticsPage = () => {
       })
   }
 
+  const rowsData = (searchField !== '' ? filteredData : data).map(store => {
+    const countOrdered = store.listings.filter(listing => listing.purchaseOrderCompleted).length;
 
-  const rowsData = data.map(store => {
     return {
       storeName: store.storeName,
       storeLink: store.storeLink,
       numberOfOffers: store.numberOfOffers,
       newLinksFound: store.newLinksFound,
-      purchaseOrderCompletedNumber: store.listings.reduce((acc, listing) => { return acc + listing.purchaseOrderCompleted }, 0),
-      purchasePercantage: store.listings.reduce((acc, listing) => { return acc + listing.purchaseOrderCompleted }, 0) / store.newLinksFound * 100,
+      purchaseOrderCompletedNumber: countOrdered,
+      purchasePercantage: countOrdered / store.newLinksFound * 100 || 0,
       deactivated: deactivatedStates[store._id] || false,
       checkbox: (
         <input
@@ -91,13 +104,24 @@ const AmazonStatisticsPage = () => {
   })
 
   return (
-    <div style={{width: '100%'}}>
-      <DataGrid columns={columns} rows={rowsData} />
+    <div>
       <div>
-        <button onClick={handleSave}>Save</button>
+        <div >
+          <input
+            placeholder="Search for..."
+            type="text"
+            onChange={handleChange}
+          />
+        </div>
       </div>
+      <div style={{ width: '100%' }}>
+        <DataGrid columns={columns} rows={rowsData} />
+        <div>
+          <button onClick={handleSave}>Save</button>
+        </div>
+      </div>
+
     </div>
-  
   )
 }
 

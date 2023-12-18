@@ -8,7 +8,6 @@ import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import AmazonPage from './pages/amazonPages/AmazonPage'
 import AmazonResearchPage from './pages/amazonPages/AmazonResearchPage'
 import AmazonStatisticsPage from './pages/amazonPages/AmazonStatisticsPage'
-import AmazonDeactivatePage from './pages/amazonPages/AmazonDeactivatePage'
 import AmazonSavedListings from './pages/amazonPages/AmazonSavedListings'
 
 function App() {
@@ -47,7 +46,6 @@ function App() {
             <Route path='/amazon' element={<AmazonPage />} />
             <Route path='amazon/research' element={<AmazonResearchPage />} />
             <Route path='amazon/statistics' element={<AmazonStatisticsPage />} />
-            <Route path='amazon/deactivate' element={<AmazonDeactivatePage />} />
             <Route path='amazon/savedlistings' element={<AmazonSavedListings />} />
 
       </Routes>

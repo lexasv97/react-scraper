@@ -22,7 +22,7 @@ const Navbar = () => {
                     <Link to='/'>Gamestop</Link>
                     <Link to='/amazon'>Amazon</Link>
                 </div>
-
+                <hr />
             </div>
         </nav>
     )
