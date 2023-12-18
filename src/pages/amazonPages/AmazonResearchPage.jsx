@@ -7,15 +7,14 @@ import 'react-data-grid/lib/styles.css';
 import DataGrid from 'react-data-grid';
 
 const initialState = {
-    newData: [],
     data: [],
     changedListings: [],
 };
 
 const reducer = (state, action) => {
     switch (action.type) {
-        case 'SET_NEW_DATA':
-            return { ...state, newData: action.payload };
+        case 'SET_CHANGED_LISTINGS':
+            return { ...state, changedListings: action.payload };
         case 'SET_DATA':
             return { ...state, data: action.payload };
         case 'TOGGLE_CHECKBOX':
@@ -42,6 +41,7 @@ const reducer = (state, action) => {
 const AmazonResearchPage = () => {
 
     const [state, dispatch] = useReducer(reducer, initialState);
+    const [errorMessage, setErrorMessage] = useState('')
 
     const columns = [
         { key: 'name', name: 'Name' },
@@ -57,11 +57,11 @@ const AmazonResearchPage = () => {
     const handleStart = () => {
         get('/amazon/getnewlistings')
             .then((response) => {
-                console.log("New listings after start: ", response.data)
-                dispatch({ type: 'SET_NEW_DATA', payload: response.data });
+                getNewListings()
             })
             .catch((err) => {
                 console.log(err)
+                setErrorMessage(err.response.data.message)
             })
     }
     const getNewListings = () => {
@@ -79,27 +79,36 @@ const AmazonResearchPage = () => {
             if (listing._id === listingId) {
                 return {
                     ...listing,
-                    purchaseOrderCompleted: checkboxName === 'purchaseOrderCompleted',
-                    savedForLater: checkboxName === 'savedForLater',
-                    deactivated: checkboxName === 'deactivated'
+                    [checkboxName]: !listing[checkboxName]
                 };
             }
-            return {
-                ...listing,
-                purchaseOrderCompleted: false,
-                savedForLater: false,
-                deactivated: false
-            };
+            return listing;
         });
-
+    
         dispatch({ type: 'SET_DATA', payload: updatedData });
+    
+        const changedListing = updatedData.find(listing => listing._id === listingId);
+        const index = state.changedListings.findIndex(item => item._id === listingId);
+    
+        if (index === -1 && (changedListing.purchaseOrderCompleted || changedListing.savedForLater || changedListing.deactivated)) {
+            dispatch({ type: 'TOGGLE_CHECKBOX', payload: changedListing });
+        } else if (index !== -1 && !(changedListing.purchaseOrderCompleted || changedListing.savedForLater || changedListing.deactivated)) {
+            const filteredListings = state.changedListings.filter(item => item._id !== listingId);
+            dispatch({ type: 'SET_CHANGED_LISTINGS', payload: filteredListings });
+        }
     };
+
     const handleSave = () => {
+        if (state.changedListings.length === 0) {
+            setErrorMessage('No changes to save.')
+            return
+        }
         // Perform axios.put request using state.changedListings
         console.log("Changed Listings: ", state.changedListings);
         put('/amazon/updatelistings', state.changedListings)
             .then((response) => {
                 console.log(response)
+                getNewListings()
             })
             .catch((err) => {
                 console.log(err)
@@ -122,6 +131,7 @@ const AmazonResearchPage = () => {
             checkbox1: (
                 <input
                     type="checkbox"
+                    name={`purchaseOrderCompleted_${listing._id}`}
                     checked={listing.purchaseOrderCompleted}
                     onChange={() => handleCheckboxChange(listing._id, 'purchaseOrderCompleted')}
                 />
@@ -129,6 +139,7 @@ const AmazonResearchPage = () => {
             checkbox2: (
                 <input
                     type="checkbox"
+                    name={`savedForLater_${listing._id}`}
                     checked={listing.savedForLater}
                     onChange={() => handleCheckboxChange(listing._id, 'savedForLater')}
                 />
@@ -136,6 +147,7 @@ const AmazonResearchPage = () => {
             checkbox3: (
                 <input
                     type="checkbox"
+                    name={`deactivated_${listing._id}`}
                     checked={listing.deactivated}
                     onChange={() => handleCheckboxChange(listing._id, 'deactivated')}
                 />
@@ -143,7 +155,7 @@ const AmazonResearchPage = () => {
         }
     })
 
-    console.log("state.data: ", state.data)
+  //  console.log("state.data: ", state.data)
 
     return (
         <div>
@@ -151,6 +163,7 @@ const AmazonResearchPage = () => {
             <div>
                 <button onClick={handleStart}>Start button</button>
             </div>
+            {errorMessage && <p>{errorMessage}</p>}
             <div style={{ width: '100%' }}>
                 <DataGrid columns={columns} rows={rowsData} />
             </div>
