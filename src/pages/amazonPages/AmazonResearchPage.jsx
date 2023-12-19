@@ -46,9 +46,9 @@ const AmazonResearchPage = () => {
     const columns = [
         { key: 'name', name: 'Name' },
         { key: 'link', name: 'Link' },
-        { key: 'bsr', name: 'BSR' },
-        { key: 'bsr1%', name: 'BSR1%' },
-        { key: 'Amazon', name: 'Amazon' },
+        // { key: 'bsr', name: 'BSR' },
+        // { key: 'bsr1%', name: 'BSR1%' },
+        // { key: 'Amazon', name: 'Amazon' },
         { key: "checkbox1", name: 'Purchase Order Completed' },
         { key: "checkbox2", name: 'Save For Later' },
         { key: "checkbox3", name: 'Deactivate' }
@@ -56,7 +56,7 @@ const AmazonResearchPage = () => {
 
     const handleStart = () => {
         get('/amazon/getnewlistings')
-            .then((response) => {
+            .then(() => {
                 getNewListings()
             })
             .catch((err) => {
@@ -84,12 +84,12 @@ const AmazonResearchPage = () => {
             }
             return listing;
         });
-    
+
         dispatch({ type: 'SET_DATA', payload: updatedData });
-    
+
         const changedListing = updatedData.find(listing => listing._id === listingId);
         const index = state.changedListings.findIndex(item => item._id === listingId);
-    
+
         if (index === -1 && (changedListing.purchaseOrderCompleted || changedListing.savedForLater || changedListing.deactivated)) {
             dispatch({ type: 'TOGGLE_CHECKBOX', payload: changedListing });
         } else if (index !== -1 && !(changedListing.purchaseOrderCompleted || changedListing.savedForLater || changedListing.deactivated)) {
@@ -155,7 +155,7 @@ const AmazonResearchPage = () => {
         }
     })
 
-   // console.log("state.data: ", state.data)
+    // console.log("state.data: ", state.data)
 
     return (
         <div>
@@ -167,8 +167,8 @@ const AmazonResearchPage = () => {
             <div>
                 <button onClick={handleSave}>Save</button>
             </div>
-            <div style={{ width: '100%' }}>
-                <DataGrid columns={columns} rows={rowsData} />
+            <div style={{ height: '650px', overflow: 'auto' }}>
+                <DataGrid columns={columns} rows={rowsData} style={{ height: '100%', overflowX: 'auto' }} />
             </div>
         </div>
     )

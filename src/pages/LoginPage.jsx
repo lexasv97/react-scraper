@@ -67,11 +67,11 @@ const UserLogin = () => {
             <button type="submit">Login</button>
           </div>
 
-          <div>
+          {/* <div>
             <span>Don't have an account yet?
               <Link to="/signup">Sign Up</Link>
             </span>
-          </div>
+          </div> */}
 
           {errorMessage && <p>{errorMessage}</p>}
 

@@ -145,8 +145,8 @@ const AmazonStatisticsPage = () => {
             <div>
                 <button onClick={handleSave}>Save</button>
             </div>
-            <div>
-                <DataGrid columns={columns} rows={rowsData} />
+            <div style={{ height: '650px', overflow: 'auto' }}>
+                <DataGrid columns={columns} rows={rowsData} style={{ height: '100%' }} />
             </div>
         </div>)
 }
