@@ -155,7 +155,7 @@ const AmazonResearchPage = () => {
         }
     })
 
-  //  console.log("state.data: ", state.data)
+   // console.log("state.data: ", state.data)
 
     return (
         <div>
@@ -164,11 +164,11 @@ const AmazonResearchPage = () => {
                 <button onClick={handleStart}>Start button</button>
             </div>
             {errorMessage && <p>{errorMessage}</p>}
-            <div style={{ width: '100%' }}>
-                <DataGrid columns={columns} rows={rowsData} />
-            </div>
             <div>
                 <button onClick={handleSave}>Save</button>
+            </div>
+            <div style={{ width: '100%' }}>
+                <DataGrid columns={columns} rows={rowsData} />
             </div>
         </div>
     )

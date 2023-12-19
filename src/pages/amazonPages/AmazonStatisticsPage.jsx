@@ -1,5 +1,5 @@
 import 'react-data-grid/lib/styles.css';
-
+import { Link } from 'react-router-dom';
 import DataGrid from 'react-data-grid';
 import { useEffect, useState } from 'react';
 import { get, put } from '../../services/authService';
@@ -83,15 +83,19 @@ const AmazonStatisticsPage = () => {
   }
 
   const rowsData = (searchField !== '' ? filteredData : data).map(store => {
-    const countOrdered = store.listings.filter(listing => listing.purchaseOrderCompleted).length;
+    const countOrdered = store.listings.reduce((count, listing) => {
+      return count + (listing.purchaseOrderCompleted ? 1 : 0);
+    }, 0);
 
     return {
       storeName: store.storeName,
-      storeLink: store.storeLink,
+      storeLink: (
+        <Link to={store.storeLink} target="_blank">{store.storeLink}</Link>
+      ),
       numberOfOffers: store.numberOfOffers,
       newLinksFound: store.newLinksFound,
       purchaseOrderCompletedNumber: countOrdered,
-      purchasePercantage: countOrdered / store.newLinksFound * 100 || 0,
+      purchasePercantage: (countOrdered / store.newLinksFound * 100).toFixed(1) || 0,
       deactivated: deactivatedStates[store._id] || false,
       checkbox: (
         <input
@@ -103,24 +107,26 @@ const AmazonStatisticsPage = () => {
     }
   })
 
+  //console.log("dara: ", data)
+
   return (
     <div>
       <div>
-        <div >
-          <input
-            placeholder="Search for..."
-            type="text"
-            onChange={handleChange}
-          />
-        </div>
+        <h1>Amazon Statistics Page</h1>
       </div>
-      <div style={{ width: '100%' }}>
+      <div >
+        <input
+          placeholder="Search for..."
+          type="text"
+          onChange={handleChange}
+        />
+      </div>
+      <div>
+        <button onClick={handleSave}>Save</button>
+      </div>
+      <div style={{ width: '100%', height: "100vh" }}>
         <DataGrid columns={columns} rows={rowsData} />
-        <div>
-          <button onClick={handleSave}>Save</button>
-        </div>
       </div>
-
     </div>
   )
 }
