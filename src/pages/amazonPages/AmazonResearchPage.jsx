@@ -54,16 +54,6 @@ const AmazonResearchPage = () => {
         { key: "checkbox3", name: 'Deactivate' }
     ]
 
-    const handleStart = () => {
-        get('/amazon/getnewlistings')
-            .then(() => {
-                getNewListings()
-            })
-            .catch((err) => {
-                console.log(err)
-                setErrorMessage(err.response.data.message)
-            })
-    }
     const getNewListings = () => {
         get('/amazon/newlistings')
             .then((response) => {
@@ -74,6 +64,18 @@ const AmazonResearchPage = () => {
                 console.log(err)
             })
     }
+
+    const handleStart = () => {
+        get('/amazon/getnewlistings')
+            .then(() => {
+                getNewListings()
+            })
+            .catch((err) => {
+                console.log(err)
+                setErrorMessage(err.response.data.message)
+            })
+    }
+    
     const handleCheckboxChange = (listingId, checkboxName) => {
         const updatedData = state.data.map(listing => {
             if (listing._id === listingId) {
@@ -107,7 +109,7 @@ const AmazonResearchPage = () => {
         console.log("Changed Listings: ", state.changedListings);
         put('/amazon/updatelistings', state.changedListings)
             .then((response) => {
-                console.log(response)
+                setErrorMessage(response.data.message)
                 getNewListings()
             })
             .catch((err) => {
