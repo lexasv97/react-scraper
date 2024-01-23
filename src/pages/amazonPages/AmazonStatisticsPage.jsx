@@ -8,9 +8,9 @@ const AmazonStatisticsPage = () => {
 
   const [data, setData] = useState([])
   const [deactivatedStates, setDeactivatedStates] = useState({})
-  const [deactivatedStores, setDeactivatedStores] = useState([]); // State to store deactivated stores
+  const [deactivatedStores, setDeactivatedStores] = useState([]) // State to store deactivated stores
   const [searchField, setSearchField] = useState('')
-  const [filteredData, setFilteredData] = useState([]); // New state for filtered data
+  const [filteredData, setFilteredData] = useState([]) // New state for filtered data
 
   const columns = [
     { key: 'storeName', name: 'Store name' },
@@ -46,7 +46,7 @@ const AmazonStatisticsPage = () => {
     } catch (err) {
       console.log(err);
     }
-  };
+  }
 
   useEffect(() => {
     getAllActiveStores()
