@@ -11,6 +11,7 @@ const AmazonStatisticsPage = () => {
   const [deactivatedStores, setDeactivatedStores] = useState([]) // State to store deactivated stores
   const [searchField, setSearchField] = useState('')
   const [filteredData, setFilteredData] = useState([]) // New state for filtered data
+  const [errorMessage, setErrorMessage] = useState('')
 
   const columns = [
     { key: 'createdAt', name: 'Created at' },
@@ -72,10 +73,14 @@ const AmazonStatisticsPage = () => {
   };
 
   const handleSave = () => {
+    if (deactivatedStores.length === 0) {
+      setErrorMessage('No changes to save.')
+      return
+  }
     console.log(deactivatedStores)
     put('/amazon/deactivateStores', deactivatedStores)
-      .then(() => {
-        //console.log(res);
+      .then((response) => {
+        setErrorMessage(response.data.message)
         getAllActiveStores()
       })
       .catch(err => {
@@ -110,7 +115,7 @@ const AmazonStatisticsPage = () => {
         />
       )
     }
-  }).sort((a, b) => a.createdAt - b.createdAt);
+  }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
 
   //console.log("dara: ", data)
 
@@ -129,6 +134,7 @@ const AmazonStatisticsPage = () => {
       <div>
         <button onClick={handleSave}>Save</button>
       </div>
+      {errorMessage && <p>{errorMessage}</p>}
       <div style={{ height: '650px', overflow: 'auto' }}>
         <DataGrid columns={columns} rows={rowsData} style={{ height: '100%' }} />
       </div>
