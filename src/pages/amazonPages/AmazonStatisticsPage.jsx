@@ -13,6 +13,7 @@ const AmazonStatisticsPage = () => {
   const [filteredData, setFilteredData] = useState([]) // New state for filtered data
 
   const columns = [
+    { key: 'createdAt', name: 'Created at' },
     { key: 'storeName', name: 'Store name' },
     { key: 'storeLink', name: 'Store link' },
     { key: "numberOfOffers", name: 'Offers #' },
@@ -82,12 +83,16 @@ const AmazonStatisticsPage = () => {
       })
   }
 
-  const rowsData = (searchField !== '' ? filteredData : data).map(store => {
+  const rowsData = (searchField == '' ? data : filteredData).map(store => {
     const countOrdered = store.listings.reduce((count, listing) => {
       return count + (listing.purchaseOrderCompleted ? 1 : 0);
     }, 0);
 
+    const options = { year: '2-digit', month: '2-digit', day: '2-digit' };
+    const formattedDate = new Date(store.createdAt).toLocaleString('en-US', options);  
+
     return {
+      createdAt: formattedDate, // Convert createdAt to a Date object
       storeName: store.storeName,
       storeLink: (
         <Link to={store.storeLink} target="_blank">{store.storeLink}</Link>
@@ -105,7 +110,7 @@ const AmazonStatisticsPage = () => {
         />
       )
     }
-  })
+  }).sort((a, b) => a.createdAt - b.createdAt);
 
   //console.log("dara: ", data)
 
