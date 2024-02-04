@@ -15,6 +15,7 @@ const AmazonStatisticsPage = () => {
 
   const columns = [
     { key: 'createdAt', name: 'Created at' },
+    { key: 'updatedAt', name: 'Updated at' },
     { key: 'storeName', name: 'Store name' },
     { key: 'storeLink', name: 'Store link' },
     { key: "numberOfOffers", name: 'Offers #' },
@@ -94,10 +95,12 @@ const AmazonStatisticsPage = () => {
     }, 0);
 
     const options = { year: '2-digit', month: '2-digit', day: '2-digit' };
-    const formattedDate = new Date(store.createdAt).toLocaleString('en-US', options);  
+    const formattedCreatedDate = new Date(store.createdAt).toLocaleString('en-US', options);  
+    const formattedUpdateddDate = new Date(store.updatedAt).toLocaleString('en-US', options);  
 
     return {
-      createdAt: formattedDate, // Convert createdAt to a Date object
+      createdAt: formattedCreatedDate, // Convert createdAt to a Date object
+      updatedAt: formattedUpdateddDate,
       storeName: store.storeName,
       storeLink: (
         <Link to={store.storeLink} target="_blank">{store.storeLink}</Link>
