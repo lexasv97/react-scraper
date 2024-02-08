@@ -8,21 +8,11 @@ const AmazonPage = () => {
     const [storeLink, setStoreLink] = useState('')
     const [message, setMessage] = useState('')
 
-    const getAllStores = () => {
-        get('/amazon/stores')
-        .then((response) => {
-            setAllAmazonStores(response.data)
-        })
-        .catch((err) => {
-            console.log(err)
-          })
-    }
-
     const handleSubmitStoreLink = (e) => {
         e.preventDefault()
 
         const body = {storeLink}
-        post('/amazon/newlink', body)
+        post('/amazon/addnewlink', body)
         .then((response) => {
             setMessage('Store was successfully added.')
         })
@@ -32,10 +22,6 @@ const AmazonPage = () => {
             setMessage(errorDescription);
         })
     }
-
-    // useEffect(() => {
-    //     getAllStores()
-    // }, [])
 
   return (
     <div>
