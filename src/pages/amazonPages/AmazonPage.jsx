@@ -51,25 +51,6 @@ const AmazonPage = () => {
         <div>
             <Link to='/amazon/savedlistings'>Saved listings</Link>
         </div>
-        {/* {
-            allAmazonStores && 
-            <div>
-                {
-                    allAmazonStores.map((store) => {
-                        <div key={store._id}>
-                            <Link to={store.storeLink}>{store.storeName}</Link>
-                            {
-                              allAmazonStores.items.map((item) => {
-                                <div key={item._id}>
-
-                                </div>
-                              })  
-                            }
-                        </div>
-                    })
-                }
-            </div>
-        } */}
     </div>
   )
 }
