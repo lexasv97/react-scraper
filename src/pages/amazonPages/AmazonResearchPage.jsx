@@ -2,9 +2,9 @@ import { get, put } from "../../services/authService"
 import { useEffect, useState, useReducer } from "react"
 import AmazonStore from "../../components/AmazonStore"
 import { Link } from "react-router-dom"
-import 'react-data-grid/lib/styles.css';
-
-import DataGrid from 'react-data-grid';
+import 'react-data-grid/lib/styles.css'
+import { SyncLoader } from 'react-spinners'
+import DataGrid from 'react-data-grid'
 
 const initialState = {
     data: [],
@@ -40,7 +40,8 @@ const reducer = (state, action) => {
 
 const AmazonResearchPage = () => {
 
-    const [state, dispatch] = useReducer(reducer, initialState);
+    const [state, dispatch] = useReducer(reducer, initialState)
+    const [isLoading, setIsLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
 
     const columns = [
@@ -66,16 +67,19 @@ const AmazonResearchPage = () => {
     }
 
     const handleStart = () => {
+        setIsLoading(true)
         get('/amazon/getnewlistings')
             .then(() => {
                 getNewListings()
+                setIsLoading(false)
             })
             .catch((err) => {
                 console.log(err)
+                setIsLoading(false)
                 setErrorMessage(err.response.data.message)
             })
     }
-    
+
     const handleCheckboxChange = (listingId, checkboxName) => {
         const updatedData = state.data.map(listing => {
             if (listing._id === listingId) {
@@ -165,6 +169,9 @@ const AmazonResearchPage = () => {
             <div>
                 <button onClick={handleStart}>Start button</button>
             </div>
+            {
+                isLoading && <SyncLoader color="#36d7b7" margin={5} />
+            }
             {errorMessage && <p>{errorMessage}</p>}
             <div>
                 <button onClick={handleSave}>Save</button>
